@@ -1,0 +1,23 @@
+#headline {
+  letter-spacing: 7px;
+  font-size: 3rem;
+}
+#name {
+  position: absolute;
+  bottom: 0;
+  left: 45%;
+  animation: 2500ms ease-in-out slideFromBottom;
+}
+@keyframes slideFromBottom {
+  0% {
+    transform: translateY(100px);
+  }
+
+  60% {
+    transform: translateY(100px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
