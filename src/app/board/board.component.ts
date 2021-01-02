@@ -1,25 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Squre } from '../squre';
+import {BoardService} from "../board.service"
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent{
+export class BoardComponent implements OnInit {
 
   rowSize = 3;
   colSize = 3;
   board :Squre[][];
 
-  constructor() {
+  constructor(private service: BoardService ) {
     this.board = [] ;
-    for (let i = 0; i < this.rowSize; i++) {
-      this.board[i] = [];
-      for (let j = 0; j < this.colSize; j++) {
-        this.board[i][j]= { color:'#'+(Math.random()*0xFFFFFF<<0).toString(16)}
-      }
-    }
-    console.log(this.board)
+  }
+
+  getBoard(): void {
+    this.service.getBoard()
+        .subscribe(board => this.board = board);
+  }
+
+  onClick(row: number,col: number){
+    this.service.updateSqure(row,col,'#'+(Math.random()*0xFFFFFF<<0).toString(16))
+  }
+
+  ngOnInit() {
+    this.getBoard();
   }
 }
