@@ -3,10 +3,12 @@ import { Squre } from './squre';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 
+const COLLECTION_NAME = "board";
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class BoardService {
 
   board : Squre[][]
@@ -19,33 +21,26 @@ export class BoardService {
     this.colSize = 3;
     for (let i = 0; i < this.rowSize; i++) {
       this.board[i] = [];
-      for (let j = 0; j < this.colSize; j++) {
-        this.board[i][j]= { color:'#'+(Math.random()*0xFFFFFF<<0).toString(16)}
-      }
     }
-    
-    // firestore.collection('board').valueChanges().subscribe(s=>{
-    //   for (let i = 0; i < this.rowSize; i++) {
-    //     this.board[i] = [];
-    //     for (let j = 0; j < this.colSize; j++) {
-    //       this.board[i][j]= { color : s[0].squre[i*this.rowSize+j] }
-    //     }
-    //   }
-    // })
+
+
+    firestore.collection(COLLECTION_NAME).valueChanges().subscribe(squers=>{
+      squers.map((squre : any)=>{
+        this.board[squre.row][squre.col] = {color : squre.color};
+      })
+    })
+
   }
 
  
 
+  getId(row :number ,col: number): string{
+    return (row*this.colSize + col)+""
+  }
 
-  async updateSqure(row : number, col : number ,color : string ) : Promise<void>{
+  updateSqure(row : number, col : number ,color : string ) : void{
     this.board[row][col] = {color};
-    // try {
-    //   await this.firestorePlacesCollection
-    //     .doc(row+"")
-    //     .set({ color: color });
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    this.firestore.collection(COLLECTION_NAME).doc(this.getId(row,col)).set({row,col,color})
   } 
 
   getBoard(): Observable<Squre[][]>{

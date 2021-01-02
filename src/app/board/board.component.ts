@@ -19,7 +19,7 @@ export class BoardComponent implements OnInit {
 
   getBoard(): void {
     this.service.getBoard()
-        .subscribe(row => this.board = row);
+        .subscribe(board => this.board = board);
   }
 
   onClick(row: number,col: number){
